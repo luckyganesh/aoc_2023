@@ -1,0 +1,79 @@
+(ns aoc-2023.day-4
+  (:require [clojure.string :as str]
+            [clojure.set :as set]
+            [clojure.math :as math]))
+
+(def test_input (slurp "resources/test_inputs/day_4.txt"))
+(def actual_input (slurp "resources/actual_inputs/day_4.txt"))
+(defn str-replace [match replacement string]
+  (str/replace string match replacement))
+
+(defn str-split [pattern string]
+  (str/split string pattern))
+
+(defn parse-int [string]
+  (Integer/parseInt string))
+
+(def get-comb-ints (comp set (partial map parse-int) (partial str-split #" ")))
+
+(defn get-input-data [string]
+  (let [split-combinations (str-split #" \| " string)
+        winning-combinations (get-comb-ints (first split-combinations))
+        numbers (get-comb-ints (second split-combinations))]
+    {:winning-combinations winning-combinations
+     :numbers              numbers}))
+
+(defn get-intersection [combinations]
+  (set/intersection (:winning-combinations combinations) (:numbers combinations)))
+
+
+(defn parse-input [input]
+  (->> input
+       (str/split-lines)
+       (map (partial str-replace #"  " " "))
+       (map (partial str-split #": "))
+       (map second)
+       (map get-input-data)))
+
+(defn part_1 [input]
+  (->> input
+       parse-input
+       (map get-intersection)
+       (filter not-empty)
+       (map count)
+       (map dec)
+       (map (partial math/pow 2))
+       (map int)
+       (apply +)))
+
+(defn my-update-in [array index fun]
+  (if (>= index (count array))
+    array
+    (update-in array [index] fun)))
+(defn add-scratchcards [index till times init-scratchcards]
+  (reduce #(my-update-in %1 %2 (partial + times)) init-scratchcards (range (inc index) (+ index till 1))))
+
+(defn calculate_scratch_cards [winning_count]
+  (let [number-of-cards (count winning_count)
+        init-scratchcards (vec (repeat number-of-cards 1))]
+    (loop [init-scratchcards init-scratchcards
+           index 0]
+      (if (>= index number-of-cards)
+        init-scratchcards
+        (let [index index
+              till (get winning_count index)
+              next-array (add-scratchcards index till (get init-scratchcards index) init-scratchcards)]
+          (recur next-array (inc index)))))))
+
+(defn part_2 [input]
+  (->> input
+       parse-input
+       (map get-intersection)
+       (map count)
+       vec
+       calculate_scratch_cards
+       (apply +)
+       ))
+
+(println (part_1 actual_input))
+(println (part_2 actual_input))
