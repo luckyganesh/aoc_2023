@@ -35,21 +35,21 @@
        (map second)
        (map get-input-data)))
 
+(defn get-winning-combos-count [input]
+  (->> (parse-input input)
+       (mapv (comp count get-intersection))))
+
 (defn part_1 [input]
-  (->> input
-       parse-input
-       (map get-intersection)
-       (filter not-empty)
-       (map count)
-       (map dec)
-       (map (partial math/pow 2))
-       (map int)
+  (->> (get-winning-combos-count input)
+       (filter (comp not zero?))
+       (map (comp int (partial math/pow 2) dec))
        (apply +)))
 
 (defn my-update-in [array index fun]
   (if (>= index (count array))
     array
     (update-in array [index] fun)))
+
 (defn add-scratchcards [index till times init-scratchcards]
   (reduce #(my-update-in %1 %2 (partial + times)) init-scratchcards (range (inc index) (+ index till 1))))
 
@@ -65,15 +65,9 @@
               next-array (add-scratchcards index till (get init-scratchcards index) init-scratchcards)]
           (recur next-array (inc index)))))))
 
-(defn part_2 [input]
-  (->> input
-       parse-input
-       (map get-intersection)
-       (map count)
-       vec
-       calculate_scratch_cards
-       (apply +)
-       ))
+(def part_2 (comp (partial apply +)
+                  calculate_scratch_cards
+                  get-winning-combos-count))
 
 (println (part_1 actual_input))
 (println (part_2 actual_input))
