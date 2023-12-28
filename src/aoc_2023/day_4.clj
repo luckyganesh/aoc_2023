@@ -1,23 +1,16 @@
 (ns aoc-2023.day-4
   (:require [clojure.string :as str]
             [clojure.set :as set]
-            [clojure.math :as math]))
+            [clojure.math :as math]
+            [aoc-2023.utils :as utils]))
 
 (def test_input (slurp "resources/test_inputs/day_4.txt"))
 (def actual_input (slurp "resources/actual_inputs/day_4.txt"))
-(defn str-replace [match replacement string]
-  (str/replace string match replacement))
 
-(defn str-split [pattern string]
-  (str/split string pattern))
-
-(defn parse-int [string]
-  (Integer/parseInt string))
-
-(def get-comb-ints (comp set (partial map parse-int) (partial str-split #" ")))
+(def get-comb-ints (comp set (partial map utils/parse-int) (partial utils/str-split #" ")))
 
 (defn get-input-data [string]
-  (let [split-combinations (str-split #" \| " string)
+  (let [split-combinations (utils/str-split #" \| " string)
         winning-combinations (get-comb-ints (first split-combinations))
         numbers (get-comb-ints (second split-combinations))]
     {:winning-combinations winning-combinations
@@ -26,12 +19,11 @@
 (defn get-intersection [combinations]
   (set/intersection (:winning-combinations combinations) (:numbers combinations)))
 
-
 (defn parse-input [input]
   (->> input
        (str/split-lines)
-       (map (partial str-replace #"  " " "))
-       (map (partial str-split #": "))
+       (map (partial utils/str-replace #"  " " "))
+       (map (partial utils/str-split #": "))
        (map second)
        (map get-input-data)))
 

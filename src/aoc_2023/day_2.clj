@@ -1,5 +1,6 @@
 (ns aoc-2023.day-2
-  (:require [clojure.string :as str]))
+  (:require [aoc-2023.utils :as utils]
+            [clojure.string :as str]))
 
 
 
@@ -21,7 +22,7 @@
 
 (defn get-game-details [string]
   (let [game-sets (str/split string #": ")
-        game-id (Integer/parseInt (second (str/split (first game-sets) #" ")))
+        game-id (utils/parse-int (second (str/split (first game-sets) #" ")))
         sets (map get-set-details (str/split (second game-sets) #"; "))]
     {:id game-id :sets sets}))
 
