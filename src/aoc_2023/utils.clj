@@ -9,3 +9,7 @@
 
 (defn parse-int [string]
   (Integer/parseInt string))
+
+(def str-split-long (comp (partial mapv parse-long) str-split))
+(def str-split-int (comp (partial mapv parse-int) str-split))
+
