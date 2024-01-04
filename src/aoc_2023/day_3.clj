@@ -72,4 +72,27 @@
          (map :number)
          (apply +))))
 
+(defn add-gear-data [board number-data]
+  (let [board-last-x (dec (count (first board)))
+        board-last-y (dec (count board))
+        neighbour-coordinates (get-neighbour-coordinates [[0 0] [board-last-x board-last-y]] (:co-ordinates number-data))
+        gear-coordinates (filter (comp (partial = "*") (partial get-in board) reverse) neighbour-coordinates)]
+    (if (empty? gear-coordinates)
+      (conj number-data {:is-gear-number? false :gear-coordinate []})
+      (conj number-data {:is-gear-number? true :gear-coordinate gear-coordinates}))))
+
+(defn part-2 [input]
+  (let [board (parse-input input)]
+    (->> board
+         get-number-coordinates
+         (map (partial add-gear-data board))
+         (filter :is-gear-number?)
+         (group-by :gear-coordinate)
+         (filter (comp (partial not= 1) count second))
+         (map second)
+         (map (partial map :number))
+         (map (partial apply *))
+         (apply +))))
+
 (println (part-1 actual_input))
+(println (part-2 actual_input))
