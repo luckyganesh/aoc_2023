@@ -28,6 +28,7 @@
     <orderEntry type="library" name="Leiningen: org.clojure/data.json:0.2.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library-third-party:0.0-20151016-61277aea" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library:0.0-20151016-61277aea" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/math.numeric-tower:0.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/spec.alpha:0.3.218" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.reader:1.0.0-alpha4" level="project" />
     <orderEntry type="library" name="Leiningen: org.fusesource.jansi/jansi:1.16" level="project" />
